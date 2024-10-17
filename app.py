@@ -1,5 +1,6 @@
 import streamlit as st
 from transformers import pipeline
+import re
 
 # Set up the page configuration
 st.set_page_config(page_title="Sentiment Analyzer", page_icon=":bar_chart:", layout="centered")
@@ -27,22 +28,22 @@ user_input = st.text_area("Enter your text for sentiment analysis", placeholder=
 def load_model():
     return pipeline("sentiment-analysis")
 
-# Function to split and analyze sentences, handling "but", "and", and "when"
+# Enhanced function to split and analyze sentences, handling conjunctions and context
 def split_and_analyze(text):
-    # Split sentence by "but", "and", or "when" for more nuanced analysis
-    delimiters = [" but ", " and ", " when "," however "]
-    sentences = [text]
+    # Look for conjunctions like "but", "and", "when", "however" and split based on context
+    delimiters = r'\s*(but|and|when|however)\s*'
+    sentences = re.split(delimiters, text)
     
-    for delimiter in delimiters:
-        temp_sentences = []
-        for sentence in sentences:
-            temp_sentences.extend(sentence.split(delimiter))
-        sentences = temp_sentences
-
     results = {}
-    for sentence in sentences:
-        result = pipe(sentence)
-        results[sentence] = result
+    full_text_result = pipe(text)  # Analyze the full text first
+    results[text] = full_text_result
+
+    if len(sentences) > 1:
+        # Only split and analyze further if the full text analysis is ambiguous
+        for sentence in sentences:
+            if sentence.strip():
+                sentence_result = pipe(sentence)
+                results[sentence] = sentence_result
     return results
 
 # Perform sentiment analysis
@@ -86,5 +87,5 @@ if st.button("Analyze Sentiment"):
 # Footer for a professional touch
 st.markdown("""
 ---
-*Created with [Streamlit](https://streamlit.io/) and [Hugging Face Transformers](https://huggingface.co/transformers)*
+*Created with [Streamlit](https://streamlit.io/) and [Hugging Face Transformers](https://huggingface.co/transformers)* 
 """)
