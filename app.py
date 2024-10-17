@@ -1,6 +1,5 @@
 import streamlit as st
 from transformers import pipeline
-import re
 
 # Set up the page configuration
 st.set_page_config(page_title="Sentiment Analyzer", page_icon=":bar_chart:", layout="centered")
@@ -28,22 +27,22 @@ user_input = st.text_area("Enter your text for sentiment analysis", placeholder=
 def load_model():
     return pipeline("sentiment-analysis")
 
-# Enhanced function to split and analyze sentences, handling conjunctions and context
+# Function to split and analyze sentences, handling "but", "and", and "when"
 def split_and_analyze(text):
-    # Split text by "but", "and", "when", "however" while preserving context
-    delimiters = r'\s*(but|and|when|however)\s*'
-    sentences = re.split(delimiters, text)
+    # Split sentence by "but", "and", or "when" for more nuanced analysis
+    delimiters = [" but ", " and ", " when "," however "]
+    sentences = [text]
     
-    results = {}
-    full_text_result = pipe(text)  # Analyze the full text first
-    results[text] = full_text_result
-
-    if len(sentences) > 1:
-        # Only split and analyze further if the full text analysis is ambiguous
+    for delimiter in delimiters:
+        temp_sentences = []
         for sentence in sentences:
-            if sentence.strip():
-                sentence_result = pipe(sentence)
-                results[sentence] = sentence_result
+            temp_sentences.extend(sentence.split(delimiter))
+        sentences = temp_sentences
+
+    results = {}
+    for sentence in sentences:
+        result = pipe(sentence)
+        results[sentence] = result
     return results
 
 # Perform sentiment analysis
