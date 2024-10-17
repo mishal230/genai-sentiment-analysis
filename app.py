@@ -10,7 +10,7 @@ st.title("🧠 AI Sentiment Analyzer")
 # Add description and instructions
 st.write("""
 Welcome to the **AI Sentiment Analyzer**! This tool uses state-of-the-art NLP models to analyze the sentiment of your text input. 
-You can input anything from movie reviews, news headlines, social media posts, or personal thoughts, and we will break down the sentiment for you!
+You can input anything from news headlines, social media posts, or personal thoughts, and we will break down the sentiment for you!
 """)
 
 # Instructions
