@@ -30,7 +30,7 @@ def load_model():
 # Function to split and analyze sentences, handling "but", "and", and "when"
 def split_and_analyze(text):
     # Split sentence by "but", "and", or "when" for more nuanced analysis
-    delimiters = [" but ", " and ", " when "]
+    delimiters = [" but ", " and ", " when "," however "]
     sentences = [text]
     
     for delimiter in delimiters:
