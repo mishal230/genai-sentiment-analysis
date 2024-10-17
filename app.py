@@ -20,7 +20,7 @@ st.markdown("""
 """)
 
 # Input text field
-user_input = st.text_area("Enter your text for sentiment analysis", placeholder="Type something like 'Pakistan is a Wonderful Country.' '")
+user_input = st.text_area("Enter your text for sentiment analysis", placeholder="Type something like 'Pakistan is a Wonderful Country.'")
 
 # Load the sentiment analysis model
 @st.cache_resource
