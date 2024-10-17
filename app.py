@@ -27,29 +27,22 @@ user_input = st.text_area("Enter your text for sentiment analysis", placeholder=
 def load_model():
     return pipeline("sentiment-analysis")
 
-# Function to check for negative keywords
-def contains_negative_keywords(sentence):
-    negative_keywords = ["doubt", "worry", "fear", "regret", "sad", "disappointed"]
-    return any(keyword in sentence.lower() for keyword in negative_keywords)
-
-# Function to split and analyze sentences, handling "but" and "and"
+# Function to split and analyze sentences, handling "but", "and", and "when"
 def split_and_analyze(text):
-    # Split sentence by "but" or "and" for more nuanced analysis
-    if "but" in text:
-        sentences = text.split(" but ")
-    else:
-        sentences = text.split(" and ")
+    # Split sentence by "but", "and", or "when" for more nuanced analysis
+    delimiters = [" but ", " and ", " when "]
+    sentences = [text]
+    
+    for delimiter in delimiters:
+        temp_sentences = []
+        for sentence in sentences:
+            temp_sentences.extend(sentence.split(delimiter))
+        sentences = temp_sentences
 
     results = {}
     for sentence in sentences:
         result = pipe(sentence)
-        
-        # Check for negative keywords
-        if contains_negative_keywords(sentence) and "NEGATIVE" not in [r['label'] for r in result]:
-            results[sentence] = [{"label": "NEGATIVE", "score": 0.95}]  # Assign high confidence for detected negatives
-        else:
-            results[sentence] = result
-            
+        results[sentence] = result
     return results
 
 # Perform sentiment analysis
