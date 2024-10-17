@@ -30,7 +30,7 @@ def load_model():
 
 # Enhanced function to split and analyze sentences, handling conjunctions and context
 def split_and_analyze(text):
-    # Look for conjunctions like "but", "and", "when", "however" and split based on context
+    # Split text by "but", "and", "when", "however" while preserving context
     delimiters = r'\s*(but|and|when|however)\s*'
     sentences = re.split(delimiters, text)
     
