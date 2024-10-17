@@ -10,7 +10,7 @@ st.title("🧠 AI Sentiment Analyzer")
 # Add description and instructions
 st.write("""
 Welcome to the **AI Sentiment Analyzer**! This tool uses state-of-the-art NLP models to analyze the sentiment of your text input. 
-You can input anything from news headlines, social media posts, or personal thoughts, and we will break down the sentiment for you!
+You can input anything from movie reviews, news headlines, social media posts, or personal thoughts, and we will break down the sentiment for you!
 """)
 
 # Instructions
@@ -52,7 +52,9 @@ if st.button("Analyze Sentiment"):
     # Display results with professional formatting
     st.subheader("🔍 Detailed Sentiment Analysis")
 
-    total_score = 0
+    positive_count = 0
+    negative_count = 0
+
     for sentence, result in results.items():
         for res in result:
             label = res['label']
@@ -60,23 +62,23 @@ if st.button("Analyze Sentiment"):
             
             if label == "POSITIVE":
                 st.success(f"**Sentence:** \"{sentence}\" | **Sentiment:** {label} | **Confidence:** {score:.2f}")
-                total_score += score  # Positive score contributes positively
+                positive_count += 1
             elif label == "NEGATIVE":
                 st.error(f"**Sentence:** \"{sentence}\" | **Sentiment:** {label} | **Confidence:** {score:.2f}")
-                total_score -= score  # Negative score subtracts
-            
-            else:
-                st.warning(f"**Sentence:** \"{sentence}\" | **Sentiment:** {label} | **Confidence:** {score:.2f}")
+                negative_count += 1
 
-    # Overall sentiment based on the analysis
+    # Overall sentiment summary based on the counts of positive and negative phrases
     st.subheader("📊 Overall Sentiment Summary")
-    if total_score > 0:
-        st.success("Overall sentiment is **positive** based on the balance of positive and negative phrases.")
-    elif total_score < 0:
-        st.error("Overall sentiment is **negative** based on the balance of positive and negative phrases.")
+
+    if positive_count > 0 and negative_count > 0:
+        st.warning("Overall sentiment is **neutral** due to both positive and negative phrases being present.")
+    elif positive_count > negative_count:
+        st.success(f"Overall sentiment is **positive** based on {positive_count} positive phrases and {negative_count} negative phrases.")
+    elif negative_count > positive_count:
+        st.error(f"Overall sentiment is **negative** based on {positive_count} positive phrases and {negative_count} negative phrases.")
     else:
-        st.warning("Overall sentiment is **neutral** with balanced positive and negative phrases.")
-        
+        st.info("Overall sentiment is **neutral**.")
+
 # Footer for a professional touch
 st.markdown("""
 ---
